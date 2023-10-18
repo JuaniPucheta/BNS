@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "bns",
   "version": "1.0.0",
   "description": "API REST para administrar usuarios en memoria",
@@ -11,7 +12,10 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mysql2": "^3.6.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

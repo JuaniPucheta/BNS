@@ -1,46 +1,53 @@
-const users = [];
-let lastUserId = 0; 
+import { pool } from '../app.js';
 
-exports.getUsers = (req, res) => {
-    res.status(200).json({ message: 'Usuarios obtenidos correctamente', data: users });   
-};
-
-exports.getUser = (req, res) => {
-    const id = req.params.id;
-    const user = users.find(u => u.id === Number(id));
-    if (!user) {
-        return res.status(404).json({ error: 'Usuario no encontrado' });
+const createUser = async (req, res) => {
+    const { name, age } = req.body;
+    try {
+        const [result] = await pool.query('INSERT INTO users (name, age) VALUES (?, ?)', [name, age]);
+        res.status(201).json({ id: result.insertId, name, age });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    res.status(200).json({ message: 'Usuario obtenido correctamente', data: user });
-};
+}
 
-exports.createUser = (req, res) => {
-    const { nombre, edad } = req.body;
-    lastUserId++;
-    const newUser = { id: lastUserId, nombre, edad };
-    users.push(newUser);
-    res.status(201).json({ message: 'Usuario creado exitosamente', data: newUser });
-  };
-
-exports.updateUser = (req, res) => {
-    const userId = req.params.id;
-    const user = users.find((u) => u.id === userId);
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+const getUsers = async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM users');
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-  
-    const { nombre, edad } = req.body;
-    user.nombre = nombre || user.nombre;
-    user.edad = edad || user.edad;
-    res.status(200).json({ message: 'Usuario actualizado correctamente', data: user });
-};
+}
 
-exports.deleteUser = (req, res) => {
-    const userId = req.params.id;
-    const userIndex = users.findIndex((u) => u.id === userId);
-    if (userIndex === -1) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+const getUserById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+        res.status(200).json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    const deletedUser = users.splice(userIndex, 1)[0];
-    res.status(200).json({ message: 'Usuario eliminado exitosamente', data: deletedUser });
-};
+}
+
+const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { name, age } = req.body;
+    try {
+        await pool.query('UPDATE users SET name = ?, age = ? WHERE id = ?', [name, age, id]);
+        res.status(200).json({ id, name, age });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('DELETE FROM users WHERE id = ?', [id]);
+        res.status(200).json({ message: `Usuario con id ${id} eliminado` });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { createUser, getUsers, getUserById, updateUser, deleteUser };
