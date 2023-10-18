@@ -2,7 +2,7 @@
   "name": "bns",
   "version": "1.0.0",
   "description": "Repo en conjunto BNS\r Para la rama develop",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
