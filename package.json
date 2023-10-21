@@ -1,6 +1,7 @@
 {
   "name": "bns",
   "version": "1.0.0",
+  "type": "module",
   "description": "Repo en conjunto BNS\r Para la rama develop",
   "main": "app.js",
   "scripts": {
@@ -11,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "mysql2": "^3.6.1"
+    "mysql2": "^3.6.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }
